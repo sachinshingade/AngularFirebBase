@@ -32483,7 +32483,7 @@ var ChartsRoutingModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div [@routerTransition]>\n    <app-page-header [heading]=\"'Charts'\" [icon]=\"'fa-bar-chart-o'\"></app-page-header>\n    <div class=\"row\">\n        <div class=\"col col-sm-6\">\n            <div class=\"card mb-3\">\n                <div class=\"card-header\">\n                    Bar Chart\n                </div>\n                <div class=\"card-body\">\n                    <canvas baseChart\n                    #baseChart=\"base-chart\" [datasets]=\"barChartData\" [labels]=\"barChartLabels\" [options]=\"barChartOptions\" [legend]=\"barChartLegend\" [chartType]=\"barChartType\" (chartHover)=\"chartHovered($event)\" (chartClick)=\"chartClicked($event)\">\n                    </canvas>\n                </div>\n                <div class=\"card-footer\">\n                    <!-- <button class=\"btn btn-info btn-md\" (click)=\"randomize()\">Update</button>&nbsp;&nbsp;&nbsp; -->\n                    <button class=\"btn btn-primary btn-md\" (click)=\"showAddForm()\">Add</button>&nbsp;&nbsp;&nbsp;\n                    <button class=\"btn btn-danger btn-md\" (click)=\"showDeleteForm()\">Delete</button>\n                </div>\n                <div  class=\"card-footer\" *ngIf=\"disabledAddForm\">\n                    <form role=\"form\" #addStockForm>\n                        <div class=\"form-content\">\n                            <div class=\"form-group\">\n                                    <select type=\"select\" ng-model=\"year\" #year class=\"form-control\">\n                                            <option *ngFor=\"let label of barChartLabels\" [value]=\"label\">\n                                                {{label}}\n                                            </option>\n                                    </select>\n                            </div>\n                            <div class=\"form-group\">\n                                <input type=\"text\" ng-model=\"seriesa\" #seriesa class=\"form-control input-underline input-lg\"  placeholder=\"Series A value\">\n                            </div>\n                            <div class=\"form-group\">\n                                <input type=\"text\" ng-model=\"seriesb\" #seriesb class=\"form-control input-underline input-lg\"  placeholder=\"Series B value\">\n                            </div>\n                        </div>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"newStockData(addStockForm,year.value,seriesa.value,seriesb.value)\"> Submit </a>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"showAddForm(1)\">Cancel </a>\n                        &nbsp;\n                    </form>\n                </div>\n                <div  class=\"card-footer\" *ngIf=\"disabledDeleteForm\">\n                    <form role=\"form\" #deleteStockForm>\n                        <div class=\"form-content\">\n                            <div class=\"form-group\">\n                                    <select type=\"select\" ng-model=\"year\" #year class=\"form-control\">\n                                            <option *ngFor=\"let label of barChartLabels\" [value]=\"label\">\n                                                {{label}}\n                                            </option>\n                                    </select>\n                            </div>\n                        </div>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"deleteStockData(year.$key)\"> Submit </a>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"showDeleteForm(1)\">Cancel </a>\n                        &nbsp;\n                    </form>\n                </div>\n            </div>\n        </div>\n        <!-- <div class=\"col col-sm-6\">\n            <div class=\"card mb-3\">\n                <div class=\"card-header\">\n                    Doughnut Chart\n                </div>\n                <div class=\"card-body\">\n                    <canvas baseChart height=\"180px\" [data]=\"doughnutChartData\" [labels]=\"doughnutChartLabels\" [chartType]=\"doughnutChartType\" (chartHover)=\"chartHovered($event)\" (chartClick)=\"chartClicked($event)\">\n                    </canvas>\n                </div>\n            </div>\n        </div> -->\n    </div>\n</div>\n"
+module.exports = "<div [@routerTransition]>\n    <app-page-header [heading]=\"'Charts'\" [icon]=\"'fa-bar-chart-o'\"></app-page-header>\n    <div class=\"row\">\n        <div class=\"col col-sm-6\">\n            <div class=\"card mb-3\">\n                <div class=\"card-header\">\n                    Bar Chart\n                </div>\n                <div class=\"card-body\">\n                    <canvas baseChart\n                    #baseChart=\"base-chart\" [datasets]=\"barChartData\" [labels]=\"barChartLabels\" [options]=\"barChartOptions\" [legend]=\"barChartLegend\" [chartType]=\"barChartType\" (chartHover)=\"chartHovered($event)\" (chartClick)=\"chartClicked($event)\">\n                    </canvas>\n                </div>\n                <div class=\"card-footer\">\n                    <!-- <button class=\"btn btn-info btn-md\" (click)=\"randomize()\">Update</button>&nbsp;&nbsp;&nbsp; -->\n                    <button class=\"btn btn-info btn-sm\" (click)=\"showAddForm()\">Add</button>&nbsp;&nbsp;&nbsp;\n                    <button class=\"btn btn-primary btn-sm\" (click)=\"showUpdateForm()\">Update</button>&nbsp;&nbsp;&nbsp;\n                    <button class=\"btn btn-danger btn-sm\" (click)=\"showDeleteForm()\">Delete</button>\n                </div>\n                <div  class=\"card-footer\" *ngIf=\"disabledAddForm\">\n                    <h6>Add Form</h6>\n                    <form role=\"form\" #addStockForm>\n                        <div class=\"form-content\">\n                            <div class=\"form-group\">\n                                    <select type=\"select\" ng-model=\"year\" #year class=\"form-control\">\n                                            <option *ngFor=\"let label of barChartLabels\" [value]=\"label\">\n                                                {{label}}\n                                            </option>\n                                    </select>\n                            </div>\n                            <div class=\"form-group\">\n                                <input type=\"text\" ng-model=\"seriesa\" #seriesa class=\"form-control input-underline input-lg\"  placeholder=\"Series A value\">\n                            </div>\n                            <div class=\"form-group\">\n                                <input type=\"text\" ng-model=\"seriesb\" #seriesb class=\"form-control input-underline input-lg\"  placeholder=\"Series B value\">\n                            </div>\n                        </div>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"newStockData(addStockForm,year.value,seriesa.value,seriesb.value)\"> Submit </a>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"showUpdateForm(1)\">Cancel </a>\n                        &nbsp;\n                    </form>\n                </div>\n                <div  class=\"card-footer\" *ngIf=\"disabledUpdateForm\">\n                    <h6>Update Form</h6>\n                    <form role=\"form\" #updateStockForm>\n                        <div class=\"form-content\">\n                            <div class=\"form-group\">\n                                    <select type=\"select\" ng-model=\"year\" #year class=\"form-control\">\n                                            <option *ngFor=\"let label of barChartLabels\" [value]=\"label\">\n                                                {{label}}\n                                            </option>\n                                    </select>\n                            </div>\n                            <div class=\"form-group\">\n                                <input type=\"text\" ng-model=\"seriesa\" #seriesa class=\"form-control input-underline input-lg\"  placeholder=\"Series A value\">\n                            </div>\n                            <div class=\"form-group\">\n                                <input type=\"text\" ng-model=\"seriesb\" #seriesb class=\"form-control input-underline input-lg\"  placeholder=\"Series B value\">\n                            </div>\n                        </div>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"updateStockData(updateStockForm,year.value,seriesa.value,seriesb.value)\"> Submit </a>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"showAddForm(1)\">Cancel </a>\n                        &nbsp;\n                    </form>\n                </div>\n                <div  class=\"card-footer\" *ngIf=\"disabledDeleteForm\">\n                    <h6>Delete Form</h6>\n                    <form role=\"form\" #deleteStockForm>\n                        <div class=\"form-content\">\n                            <div class=\"form-group\">\n                                    <select type=\"select\" ng-model=\"year\" #year class=\"form-control\">\n                                            <option *ngFor=\"let label of barChartLabels\" [value]=\"label\">\n                                                {{label}}\n                                            </option>\n                                    </select>\n                            </div>\n                        </div>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"deleteStockData(deleteStockForm,year.value)\"> Submit </a>\n                        <a class=\"btn rounded-btn\" [routerLink]=\"['/charts']\" (click)=\"showDeleteForm(1)\">Cancel </a>\n                        &nbsp;\n                    </form>\n                </div>\n            </div>\n        </div>\n        <!-- <div class=\"col col-sm-6\">\n            <div class=\"card mb-3\">\n                <div class=\"card-header\">\n                    Doughnut Chart\n                </div>\n                <div class=\"card-body\">\n                    <canvas baseChart height=\"180px\" [data]=\"doughnutChartData\" [labels]=\"doughnutChartLabels\" [chartType]=\"doughnutChartType\" (chartHover)=\"chartHovered($event)\" (chartClick)=\"chartClicked($event)\">\n                    </canvas>\n                </div>\n            </div>\n        </div> -->\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -32533,6 +32533,7 @@ var ChartsComponent = /** @class */ (function () {
         this.ref = ref;
         this.api = api;
         this.firebaseYearKey = [];
+        this.shiftBarData = [];
         this.barChartData = [
             { data: [], label: 'Series A' },
             { data: [], label: 'Series B' }
@@ -32566,6 +32567,7 @@ var ChartsComponent = /** @class */ (function () {
             _this.updateChartData(stocks);
             ;
         });
+        //this.chart.ngOnInit();
     };
     ChartsComponent.prototype.updateChartData = function (stockData) {
         if (stockData) {
@@ -32575,10 +32577,8 @@ var ChartsComponent = /** @class */ (function () {
                 var yearIndex = this.barChartLabels.indexOf(stockData[i].data.year);
                 this.barChartData[0].data[yearIndex] = Number(stockData[i].data.seriesa);
                 this.barChartData[1].data[yearIndex] = Number(stockData[i].data.seriesb);
-                this.firebaseYearKey.push({
-                    year: yearIndex,
-                    key: key
-                });
+                this.firebaseYearKey[stockData[i].data.year] = key;
+                this.shiftBarData[stockData[i].data.year] = yearIndex;
             }
         }
         // this.ref.detectChanges();
@@ -32590,33 +32590,54 @@ var ChartsComponent = /** @class */ (function () {
         if (!year || !seriesa || !seriesb) {
             return;
         }
-        var result = this.api.createStock(mydata);
+        this.api.createStock(mydata);
         alert('Data added');
         addStockForm.reset();
-        this.chart.ngOnInit();
+    };
+    //update stock data
+    ChartsComponent.prototype.updateStockData = function (updateStockForm, year, updatedseriesa, updatedseriesb) {
+        var mydata = { year: year, updatedseriesa: updatedseriesa, updatedseriesb: updatedseriesb };
+        if (!year || !updatedseriesa || !updatedseriesb) {
+            return;
+        }
+        this.api.updateStock(this.firebaseYearKey[year], { seriesa: updatedseriesa, seriesb: updatedseriesb });
+        alert('Data updated');
+        updateStockForm.reset();
+    };
+    //delete stock data
+    ChartsComponent.prototype.deleteStockData = function (deleteStockForm, year) {
+        this.api.deleteStock(this.firebaseYearKey[year]);
+        alert('Data deleted');
+        deleteStockForm.reset();
     };
     ChartsComponent.prototype.showAddForm = function (flag) {
         if (!flag) {
+            this.disabledDeleteForm = false;
+            this.disabledUpdateForm = false;
             this.disabledAddForm = true;
         }
         else {
             this.disabledAddForm = false;
         }
     };
+    ChartsComponent.prototype.showUpdateForm = function (flag) {
+        if (!flag) {
+            this.disabledDeleteForm = false;
+            this.disabledAddForm = false;
+            this.disabledUpdateForm = true;
+        }
+        else {
+            this.disabledUpdateForm = false;
+        }
+    };
     ChartsComponent.prototype.showDeleteForm = function (flag) {
         if (!flag) {
+            this.disabledAddForm = false;
+            this.disabledUpdateForm = false;
             this.disabledDeleteForm = true;
         }
         else {
             this.disabledDeleteForm = false;
-        }
-    };
-    ChartsComponent.prototype.deleteStockData = function (year) {
-        for (var i = 0; i < this.firebaseYearKey.length; i++) {
-            if (this.firebaseYearKey[i].year == year) {
-                this.api.deleteStock(this.firebaseYearKey[i].key);
-                this.chart.ngOnInit();
-            }
         }
     };
     __decorate([

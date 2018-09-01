@@ -689,6 +689,10 @@ var ApiService = /** @class */ (function () {
     ApiService.prototype.createStock = function (stock) {
         this.stockRef.push(stock);
     };
+    ApiService.prototype.updateStock = function (key, value) {
+        var _this = this;
+        this.stockRef.update(key, value).catch(function (error) { return _this.handleError(error); });
+    };
     ApiService.prototype.getStocksList = function () {
         return this.stockRef;
     };
