@@ -13,9 +13,9 @@
                 </div>
                 <div class="card-footer">
                     <!-- <button class="btn btn-info btn-md" (click)="randomize()">Update</button>&nbsp;&nbsp;&nbsp; -->
-                    <button class="btn btn-info btn-sm" (click)="showAddForm(0)">Add</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-primary btn-sm" (click)="showUpdateForm(0)">Update</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-danger btn-sm" (click)="showDeleteForm(0)">Delete</button>
+                    <button class="btn btn-info btn-sm" (click)="showAddForm()">Add</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-primary btn-sm" (click)="showUpdateForm()">Update</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-danger btn-sm" (click)="showDeleteForm()">Delete</button>
                 </div>
                 <div  class="card-footer" *ngIf="disabledAddForm">
                     <h6>Add Form</h6>
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="newStockData(addStockForm,year.value,seriesa.value,seriesb.value)"> Submit </a>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showUpdateForm(1)">Cancel </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="hideAddForm()">Cancel </a>
                         &nbsp;
                     </form>
                 </div>
@@ -59,7 +59,7 @@
                             </div>
                         </div>
                         <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="updateStockData(updateStockForm,year.value,seriesa.value,seriesb.value)"> Submit </a>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showAddForm(1)">Cancel </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="hideUpdateForm()">Cancel </a>
                         &nbsp;
                     </form>
                 </div>
@@ -75,8 +75,8 @@
                                     </select>
                             </div>
                         </div>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="deleteStockData(deleteStockForm,year.value)"> Submit </a>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showDeleteForm(1)">Cancel </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="deleteStockData(year.value)"> Submit </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="hideDeleteForm()">Cancel </a>
                         &nbsp;
                     </form>
                 </div>

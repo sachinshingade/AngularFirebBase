@@ -80,42 +80,43 @@ export class ChartsComponent implements OnInit {
     }
 
     //delete stock data
-    deleteStockData(deleteStockForm, year:string){
+    deleteStockData(year:string){
         this.api.deleteStock(this.firebaseYearKey[year]);
         alert('Data deleted');
-        deleteStockForm.reset();
+        let index = this.shiftBarData[year];
+        this.barChartData[0].data[index] = 0;
+        this.barChartData[1].data[index] = 0;
     }
 
-    showAddForm(flag){
-        if(!flag){
-            this.disabledDeleteForm =  false;
-            this.disabledUpdateForm =  false;
-            this.disabledAddForm =  true;
-        }else{
-            this.disabledAddForm =  false;
-        }
+    showAddForm(){
+        this.disabledDeleteForm =  false;
+        this.disabledUpdateForm =  false;
+        this.disabledAddForm =  true;
     }
 
-    showUpdateForm(flag){
-        if(!flag){
-            this.disabledDeleteForm =  false;
-            this.disabledAddForm =  false;
-            this.disabledUpdateForm =  true;
-        }else{
-            this.disabledUpdateForm =  false;
-        }
+    hideAddForm(){
+        this.disabledAddForm =  false;
     }
 
-    showDeleteForm(flag){
-        if(!flag){
-            this.disabledAddForm =  false;
-            this.disabledUpdateForm =  false;
-            this.disabledDeleteForm =  true;
-        }else{
-            this.disabledDeleteForm =  false;
-        }
+    showUpdateForm(){
+        this.disabledDeleteForm =  false;
+        this.disabledAddForm =  false;
+        this.disabledUpdateForm =  true;
     }
 
+    hideUpdateForm(){
+        this.disabledUpdateForm =  false;
+    }
+
+    showDeleteForm(){
+        this.disabledAddForm =  false;
+        this.disabledUpdateForm =  false;
+        this.disabledDeleteForm =  true;
+    }
+
+    hideDeleteForm(){
+        this.disabledDeleteForm =  false;
+    }
 
     // bar chart
     public barChartOptions: any = {
