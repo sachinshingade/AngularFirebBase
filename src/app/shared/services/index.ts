@@ -19,6 +19,10 @@ export class ApiService {
     this.stockRef.push(stock)
   }
 
+  updateStock(key: string, value: any): void {
+    this.stockRef.update(key, value).catch(error => this.handleError(error));
+  }
+
   getStocksList(): AngularFireList<StockData> {
     return this.stockRef;
   }

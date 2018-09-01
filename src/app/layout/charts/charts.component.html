@@ -13,10 +13,12 @@
                 </div>
                 <div class="card-footer">
                     <!-- <button class="btn btn-info btn-md" (click)="randomize()">Update</button>&nbsp;&nbsp;&nbsp; -->
-                    <button class="btn btn-primary btn-md" (click)="showAddForm()">Add</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-danger btn-md" (click)="showDeleteForm()">Delete</button>
+                    <button class="btn btn-info btn-sm" (click)="showAddForm()">Add</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-primary btn-sm" (click)="showUpdateForm()">Update</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-danger btn-sm" (click)="showDeleteForm()">Delete</button>
                 </div>
                 <div  class="card-footer" *ngIf="disabledAddForm">
+                    <h6>Add Form</h6>
                     <form role="form" #addStockForm>
                         <div class="form-content">
                             <div class="form-group">
@@ -34,11 +36,35 @@
                             </div>
                         </div>
                         <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="newStockData(addStockForm,year.value,seriesa.value,seriesb.value)"> Submit </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showUpdateForm(1)">Cancel </a>
+                        &nbsp;
+                    </form>
+                </div>
+                <div  class="card-footer" *ngIf="disabledUpdateForm">
+                    <h6>Update Form</h6>
+                    <form role="form" #updateStockForm>
+                        <div class="form-content">
+                            <div class="form-group">
+                                    <select type="select" ng-model="year" #year class="form-control">
+                                            <option *ngFor="let label of barChartLabels" [value]="label">
+                                                {{label}}
+                                            </option>
+                                    </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" ng-model="seriesa" #seriesa class="form-control input-underline input-lg"  placeholder="Series A value">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" ng-model="seriesb" #seriesb class="form-control input-underline input-lg"  placeholder="Series B value">
+                            </div>
+                        </div>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="updateStockData(updateStockForm,year.value,seriesa.value,seriesb.value)"> Submit </a>
                         <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showAddForm(1)">Cancel </a>
                         &nbsp;
                     </form>
                 </div>
                 <div  class="card-footer" *ngIf="disabledDeleteForm">
+                    <h6>Delete Form</h6>
                     <form role="form" #deleteStockForm>
                         <div class="form-content">
                             <div class="form-group">
@@ -49,7 +75,7 @@
                                     </select>
                             </div>
                         </div>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="deleteStockData(year.$key)"> Submit </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="deleteStockData(deleteStockForm,year.value)"> Submit </a>
                         <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showDeleteForm(1)">Cancel </a>
                         &nbsp;
                     </form>
