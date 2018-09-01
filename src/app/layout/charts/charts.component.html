@@ -7,15 +7,56 @@
                     Bar Chart
                 </div>
                 <div class="card-body">
-                    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    <canvas baseChart
+                    #baseChart="base-chart" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                     </canvas>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-info btn-sm" (click)="randomize()">Update</button>
+                    <!-- <button class="btn btn-info btn-md" (click)="randomize()">Update</button>&nbsp;&nbsp;&nbsp; -->
+                    <button class="btn btn-primary btn-md" (click)="showAddForm()">Add</button>&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-danger btn-md" (click)="showDeleteForm()">Delete</button>
+                </div>
+                <div  class="card-footer" *ngIf="disabledAddForm">
+                    <form role="form" #addStockForm>
+                        <div class="form-content">
+                            <div class="form-group">
+                                    <select type="select" ng-model="year" #year class="form-control">
+                                            <option *ngFor="let label of barChartLabels" [value]="label">
+                                                {{label}}
+                                            </option>
+                                    </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" ng-model="seriesa" #seriesa class="form-control input-underline input-lg"  placeholder="Series A value">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" ng-model="seriesb" #seriesb class="form-control input-underline input-lg"  placeholder="Series B value">
+                            </div>
+                        </div>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="newStockData(addStockForm,year.value,seriesa.value,seriesb.value)"> Submit </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showAddForm(1)">Cancel </a>
+                        &nbsp;
+                    </form>
+                </div>
+                <div  class="card-footer" *ngIf="disabledDeleteForm">
+                    <form role="form" #deleteStockForm>
+                        <div class="form-content">
+                            <div class="form-group">
+                                    <select type="select" ng-model="year" #year class="form-control">
+                                            <option *ngFor="let label of barChartLabels" [value]="label">
+                                                {{label}}
+                                            </option>
+                                    </select>
+                            </div>
+                        </div>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="deleteStockData(year.$key)"> Submit </a>
+                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="showDeleteForm(1)">Cancel </a>
+                        &nbsp;
+                    </form>
                 </div>
             </div>
         </div>
-        <div class="col col-sm-6">
+        <!-- <div class="col col-sm-6">
             <div class="card mb-3">
                 <div class="card-header">
                     Doughnut Chart
@@ -25,54 +66,6 @@
                     </canvas>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Radar Chart
-                </div>
-                <div class="card-body">
-                    <canvas baseChart height="150px" [datasets]="radarChartData" [labels]="radarChartLabels" [chartType]="radarChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Pie Chart
-                </div>
-                <div class="card-body">
-                    <canvas baseChart height="150px" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Polar Area Chart
-                </div>
-                <div class="card-body">
-                    <canvas baseChart height="130px" [data]="polarAreaChartData" [labels]="polarAreaChartLabels" [legend]="polarAreaLegend" [chartType]="polarAreaChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col col-sm-6">
-            <div class="card mb-3">
-                <div class="card-header">
-                    Line Chart
-                </div>
-                <div class="card-body">
-                    <canvas baseChart height="130" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-                    </canvas>
-                </div>
-            </div>
-        </div>
+        </div> -->
     </div>
 </div>

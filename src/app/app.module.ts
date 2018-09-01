@@ -9,6 +9,13 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './shared';
+import {ApiService} from './shared/services/index'
+import { HttpModule } from '@angular/http';
+
+import {AngularFireModule} from 'angularfire2';
+import {AngularFireDatabaseModule} from 'angularfire2/database'
+import {environment} from '../environments/environment'
+
 
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
@@ -25,6 +32,9 @@ export const createTranslateLoader = (http: HttpClient) => {
     imports: [
         CommonModule,
         BrowserModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
+        HttpModule,
         BrowserAnimationsModule,
         HttpClientModule,
         TranslateModule.forRoot({
@@ -37,7 +47,7 @@ export const createTranslateLoader = (http: HttpClient) => {
         AppRoutingModule
     ],
     declarations: [AppComponent],
-    providers: [AuthGuard],
+    providers: [AuthGuard,ApiService],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

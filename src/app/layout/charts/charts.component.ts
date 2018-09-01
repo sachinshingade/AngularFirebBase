@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { routerTransition } from '../../router.animations';
+import { ApiService } from '../../shared/services/index';
+import { map } from 'rxjs/operators';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'app-charts',
@@ -8,6 +11,89 @@ import { routerTransition } from '../../router.animations';
     animations: [routerTransition()]
 })
 export class ChartsComponent implements OnInit {
+    @ViewChild("baseChart")
+    chart: BaseChartDirective;
+    model:any;
+    disabledAddForm:boolean;
+    disabledDeleteForm:boolean;
+    firebaseYearKey: any[] = [];
+
+    constructor(
+        private ref:ChangeDetectorRef,
+        private api: ApiService) {}
+
+    ngOnInit() {
+        this.api.getStocksList().snapshotChanges().pipe(
+            map(changes =>
+              changes.map(c => ({ data:c.payload.val(), label: c.payload.key }))
+            )
+          ).subscribe(stocks => {
+            this.updateChartData(stocks);;
+          });
+    }
+
+    updateChartData(stockData){
+        if(stockData){
+            for(let i =0; i< stockData.length; i++){
+               //year index
+               let key = stockData[i].label;
+               let yearIndex = this.barChartLabels.indexOf(stockData[i].data.year);
+               this.barChartData[0].data[yearIndex]= Number(stockData[i].data.seriesa);
+               this.barChartData[1].data[yearIndex]= Number(stockData[i].data.seriesb);
+
+               this.firebaseYearKey.push({
+                    year:yearIndex,
+                    key:key
+               })
+            }
+        }
+        // this.ref.detectChanges();
+        this.chart.ngOnInit();
+    }
+    public barChartData: any[] = [
+        { data: [],label: 'Series A' },
+        { data: [], label: 'Series B' }
+    ];
+
+
+    //add Stock Data
+    newStockData(addStockForm,year:number, seriesa:number, seriesb:number):void{
+        let mydata = {year, seriesa, seriesb};
+
+        if(!year||!seriesa||!seriesb){
+            return ;
+        }
+        const result =  this.api.createStock(mydata);
+        alert('Data added');
+        addStockForm.reset();
+        this.chart.ngOnInit();
+    }
+
+    showAddForm(flag){
+        if(!flag){
+            this.disabledAddForm =  true;
+        }else{
+            this.disabledAddForm =  false;
+        }
+    }
+
+    showDeleteForm(flag){
+        if(!flag){
+            this.disabledDeleteForm =  true;
+        }else{
+            this.disabledDeleteForm =  false;
+        }
+    }
+
+    deleteStockData(year:string){
+        for(let i =0; i< this.firebaseYearKey.length; i++){
+            if(this.firebaseYearKey[i].year == year){
+                this.api.deleteStock(this.firebaseYearKey[i].key);
+                this.chart.ngOnInit();
+            }
+        }
+    }
+
     // bar chart
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
@@ -20,145 +106,33 @@ export class ChartsComponent implements OnInit {
         '2009',
         '2010',
         '2011',
-        '2012'
+        '2012',
+        '2013',
+        '2014',
+        '2015',
+        '2016'
     ];
     public barChartType: string = 'bar';
     public barChartLegend: boolean = true;
 
-    public barChartData: any[] = [
-        { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
-    ];
 
-    // Doughnut
-    public doughnutChartLabels: string[] = [
-        'Download Sales',
-        'In-Store Sales',
-        'Mail-Order Sales'
-    ];
-    public doughnutChartData: number[] = [350, 450, 100];
-    public doughnutChartType: string = 'doughnut';
+    // // Doughnut
+    // public doughnutChartLabels: string[] = [
+    //     'Download Sales',
+    //     'In-Store Sales',
+    //     'Mail-Order Sales'
+    // ];
+    // public doughnutChartData: number[] = [350, 450, 100];
+    // public doughnutChartType: string = 'doughnut';
 
-    // Radar
-    public radarChartLabels: string[] = [
-        'Eating',
-        'Drinking',
-        'Sleeping',
-        'Designing',
-        'Coding',
-        'Cycling',
-        'Running'
-    ];
-    public radarChartData: any = [
-        { data: [65, 59, 90, 81, 56, 55, 40], label: 'Series A' },
-        { data: [28, 48, 40, 19, 96, 27, 100], label: 'Series B' }
-    ];
-    public radarChartType: string = 'radar';
+    // // events
+    // public chartClicked(e: any): void {
+    //     // console.log(e);
+    // }
 
-    // Pie
-    public pieChartLabels: string[] = [
-        'Download Sales',
-        'In-Store Sales',
-        'Mail Sales'
-    ];
-    public pieChartData: number[] = [300, 500, 100];
-    public pieChartType: string = 'pie';
+    // public chartHovered(e: any): void {
+    //     // console.log(e);
+    // }
 
-    // PolarArea
-    public polarAreaChartLabels: string[] = [
-        'Download Sales',
-        'In-Store Sales',
-        'Mail Sales',
-        'Telesales',
-        'Corporate Sales'
-    ];
-    public polarAreaChartData: number[] = [300, 500, 100, 40, 120];
-    public polarAreaLegend: boolean = true;
 
-    public polarAreaChartType: string = 'polarArea';
-
-    // lineChart
-    public lineChartData: Array<any> = [
-        { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-        { data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C' }
-    ];
-    public lineChartLabels: Array<any> = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July'
-    ];
-    public lineChartOptions: any = {
-        responsive: true
-    };
-    public lineChartColors: Array<any> = [
-        {
-            // grey
-            backgroundColor: 'rgba(148,159,177,0.2)',
-            borderColor: 'rgba(148,159,177,1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        },
-        {
-            // dark grey
-            backgroundColor: 'rgba(77,83,96,0.2)',
-            borderColor: 'rgba(77,83,96,1)',
-            pointBackgroundColor: 'rgba(77,83,96,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(77,83,96,1)'
-        },
-        {
-            // grey
-            backgroundColor: 'rgba(148,159,177,0.2)',
-            borderColor: 'rgba(148,159,177,1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        }
-    ];
-    public lineChartLegend: boolean = true;
-    public lineChartType: string = 'line';
-
-    // events
-    public chartClicked(e: any): void {
-        // console.log(e);
-    }
-
-    public chartHovered(e: any): void {
-        // console.log(e);
-    }
-
-    public randomize(): void {
-        // Only Change 3 values
-        const data = [
-            Math.round(Math.random() * 100),
-            59,
-            80,
-            Math.random() * 100,
-            56,
-            Math.random() * 100,
-            40
-        ];
-        const clone = JSON.parse(JSON.stringify(this.barChartData));
-        clone[0].data = data;
-        this.barChartData = clone;
-        /**
-         * (My guess), for Angular to recognize the change in the dataset
-         * it has to change the dataset variable directly,
-         * so one way around it, is to clone the data, change it and then
-         * assign it;
-         */
-    }
-
-    constructor() {}
-
-    ngOnInit() {}
 }

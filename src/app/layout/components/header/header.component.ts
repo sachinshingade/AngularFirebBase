@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class HeaderComponent implements OnInit {
     pushRightClass: string = 'push-right';
+    username = localStorage.getItem('username');
 
     constructor(private translate: TranslateService, public router: Router) {
 
@@ -52,4 +53,5 @@ export class HeaderComponent implements OnInit {
     changeLang(language: string) {
         this.translate.use(language);
     }
+
 }
