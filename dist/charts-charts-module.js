@@ -32640,6 +32640,21 @@ var ChartsComponent = /** @class */ (function () {
             this.disabledDeleteForm = false;
         }
     };
+    // // Doughnut
+    // public doughnutChartLabels: string[] = [
+    //     'Download Sales',
+    //     'In-Store Sales',
+    //     'Mail-Order Sales'
+    // ];
+    // public doughnutChartData: number[] = [350, 450, 100];
+    // public doughnutChartType: string = 'doughnut';
+    // events
+    ChartsComponent.prototype.chartClicked = function (e) {
+        // console.log(e);
+    };
+    ChartsComponent.prototype.chartHovered = function (e) {
+        // console.log(e);
+    };
     __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"])("baseChart"),
         __metadata("design:type", ng2_charts__WEBPACK_IMPORTED_MODULE_4__["BaseChartDirective"])
