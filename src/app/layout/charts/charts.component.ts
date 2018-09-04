@@ -13,12 +13,10 @@ import { BaseChartDirective } from 'ng2-charts';
 export class ChartsComponent implements OnInit {
     @ViewChild("baseChart")
     chart: BaseChartDirective;
-    model:any;
-    disabledAddForm:boolean;
-    disabledDeleteForm:boolean;
-    disabledUpdateForm:boolean;
-    firebaseYearKey: any[] = [];
-    shiftBarData:any[] = [];
+    uniqueStocks:string[] = [];
+    allStockData=[];
+    selectedStocks=[];
+    showForm:boolean=false;
 
     constructor(
         private ref:ChangeDetectorRef,
@@ -29,125 +27,113 @@ export class ChartsComponent implements OnInit {
             map(changes =>
               changes.map(c => ({ data:c.payload.val(), label: c.payload.key }))
             )
-          ).subscribe(stocks => {
-            this.updateChartData(stocks);;
-          });
-          //this.chart.ngOnInit();
+        ).subscribe(stocks => {
+            this.getAllStockNames(stocks);
+        });
     }
 
-    updateChartData(stockData){
-        if(stockData){
-            for(let i =0; i< stockData.length; i++){
-               //year index
-               let key = stockData[i].label;
-               let yearIndex = this.barChartLabels.indexOf(stockData[i].data.year);
-               this.barChartData[0].data[yearIndex]= Number(stockData[i].data.seriesa);
-               this.barChartData[1].data[yearIndex]= Number(stockData[i].data.seriesb);
-               this.firebaseYearKey[stockData[i].data.year] = key;
-               this.shiftBarData[stockData[i].data.year] = yearIndex;
+    getAllStockNames(stocks){
+        stocks.filter((value)=>{
+            this.allStockData.push(value.data);
+            if(this.uniqueStocks.indexOf(value.data.stock) === -1){
+                this.uniqueStocks.push(value.data.stock);
             }
-        }
-        // this.ref.detectChanges();
-       this.chart.ngOnInit();
+        })
     }
+
+    public changeStock(event){
+        this.selectedStocks = [];
+        let stocks = this.allStockData;
+        stocks.filter((value)=>{
+            let yearIndex = this.barChartLabels.indexOf(value.date);
+            if(event == ''){
+                this.barChartData[0].data[yearIndex] = 0;
+                this.showForm = false;
+            }
+            if(value.stock === event){
+                this.selectedStocks.push(value);
+                this.barChartData[0].data[yearIndex] = Number(value.totalShares);
+                this.showForm = true;
+            }
+        })
+        this.chart.ngOnInit();
+    }
+
     public barChartData: any[] = [
-        { data: [],label: 'Series A' },
-        { data: [], label: 'Series B' }
+        { data: [],label: 'Total Shares' ,yAxesID: "y-axis-1"},
     ];
 
-
-    //add Stock Data
-    newStockData(addStockForm,year:number, seriesa:number, seriesb:number):void{
-        let mydata = {year, seriesa, seriesb};
-
-        if(!year||!seriesa||!seriesb){
-            return ;
-        }
-        this.api.createStock(mydata);
-        alert('Data added');
-        addStockForm.reset();
+    onEdit(index){
+        console.log(index)
     }
 
-    //update stock data
-    updateStockData(updateStockForm,year:number, updatedseriesa:number, updatedseriesb:number):void{
-        let mydata = {year, updatedseriesa, updatedseriesb};
-        if(!year||!updatedseriesa||!updatedseriesb){
-            return ;
-        }
-        this.api.updateStock(this.firebaseYearKey[year], { seriesa: updatedseriesa, seriesb:updatedseriesb});
-        alert('Data updated');
-        updateStockForm.reset();
-    }
-
-    //delete stock data
-    deleteStockData(year:string){
-        this.api.deleteStock(this.firebaseYearKey[year]);
-        alert('Data deleted');
-        let index = this.shiftBarData[year];
-        this.barChartData[0].data[index] = 0;
-        this.barChartData[1].data[index] = 0;
-    }
-
-    showAddForm(){
-        this.disabledDeleteForm =  false;
-        this.disabledUpdateForm =  false;
-        this.disabledAddForm =  true;
-    }
-
-    hideAddForm(){
-        this.disabledAddForm =  false;
-    }
-
-    showUpdateForm(){
-        this.disabledDeleteForm =  false;
-        this.disabledAddForm =  false;
-        this.disabledUpdateForm =  true;
-    }
-
-    hideUpdateForm(){
-        this.disabledUpdateForm =  false;
-    }
-
-    showDeleteForm(){
-        this.disabledAddForm =  false;
-        this.disabledUpdateForm =  false;
-        this.disabledDeleteForm =  true;
-    }
-
-    hideDeleteForm(){
-        this.disabledDeleteForm =  false;
+    onDelete(stock,shares, close){
+       this.api.deleteStock(2);
+       let stockData = this.allStockData;
+       let index =  stockData.forEach((item,i) => {
+                        console.log(item.stock)
+                    });
+       console.log(index);
     }
 
     // bar chart
     public barChartOptions: any = {
+        scales: {
+            xAxes: [{
+                barPercentage: 0.5
+            }],
+            yAxes: [{
+                id: "y-axis-1",
+                position: 'left',
+                type: 'linear',
+                ticks: {
+                    max: 1600,
+                    min: 0,
+                    stepSize: 200,
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Total Shares'
+                }
+            },
+            {
+                id: "y-axis-2",
+                position: 'right',
+                type: 'linear',
+                ticks: {
+                    max: 200,
+                    min: 0,
+                    stepSize:50,
+                    labelString: 'Close Price'
+                }
+              }]
+        },
+        barThickness:10,
         scaleShowVerticalLines: false,
         responsive: true
     };
+
     public barChartLabels: string[] = [
-        '2006',
-        '2007',
-        '2008',
-        '2009',
-        '2010',
-        '2011',
-        '2012',
-        '2013',
-        '2014',
-        '2015',
-        '2016'
+        '31/08/2018',
+        '01/09/2018',
+        '02/09/2018'
     ];
     public barChartType: string = 'bar';
     public barChartLegend: boolean = true;
 
+    public barChartColors: Array<any> = [
+        { // all colors in order
+          backgroundColor: ['blue','blue','blue']
+        }
+    ]
 
-    // // Doughnut
-    // public doughnutChartLabels: string[] = [
-    //     'Download Sales',
-    //     'In-Store Sales',
-    //     'Mail-Order Sales'
-    // ];
-    // public doughnutChartData: number[] = [350, 450, 100];
-    // public doughnutChartType: string = 'doughnut';
+    // Doughnut
+    public doughnutChartLabels: string[] = [
+        'Total Close Price',
+        'Total Shares',
+    ];
+    public doughnutChartData: number[] = [350, 450, 100];
+    public doughnutChartType: string = 'doughnut';
 
     // events
     public chartClicked(e: any): void {

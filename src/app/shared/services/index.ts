@@ -7,12 +7,17 @@ import {StockData} from '../../shared/stockdata';
 })
 export class ApiService {
 
-  private dbPath = '/stock';
+  private dbPath = '/';
 
   stockRef: AngularFireList<StockData> = null;
 
   constructor(private db: AngularFireDatabase) {
     this.stockRef = db.list(this.dbPath);
+  }
+
+  //getstock list
+  getStocksList(): AngularFireList<StockData> {
+    return this.stockRef;
   }
 
   createStock(stock: StockData): void {
@@ -23,12 +28,9 @@ export class ApiService {
     this.stockRef.update(key, value).catch(error => this.handleError(error));
   }
 
-  getStocksList(): AngularFireList<StockData> {
-    return this.stockRef;
-  }
-
-  deleteStock(key='year'):void{
-    this.stockRef.remove(key).catch(error => this.handleError(error));
+  deleteStock(key):void{
+    let deleteKey = this.dbPath+key;
+    this.stockRef.remove(deleteKey).catch(error => this.handleError(error));
   }
 
   private handleError(error) {

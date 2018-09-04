@@ -1,5 +1,15 @@
 <div [@routerTransition]>
     <app-page-header [heading]="'Charts'" [icon]="'fa-bar-chart-o'"></app-page-header>
+    <div class="selectLeft">
+        <select type="select" class="form-control" (change)="changeStock($event.target.value)">
+            <option value = "">Select Stock</option>
+            <option *ngFor="let stockname of uniqueStocks" [value]="stockname">
+                {{stockname}}
+            </option>
+        </select>
+    </div>
+    <br><br>
+    <div style="clear: both;"></div>
     <div class="row">
         <div class="col col-sm-6">
             <div class="card mb-3">
@@ -8,81 +18,14 @@
                 </div>
                 <div class="card-body">
                     <canvas baseChart
-                    #baseChart="base-chart" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    #baseChart="base-chart" [datasets]="barChartData" [colors]="barChartColors" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
                     </canvas>
                 </div>
-                <div class="card-footer">
-                    <!-- <button class="btn btn-info btn-md" (click)="randomize()">Update</button>&nbsp;&nbsp;&nbsp; -->
-                    <button class="btn btn-info btn-sm" (click)="showAddForm()">Add</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-primary btn-sm" (click)="showUpdateForm()">Update</button>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-danger btn-sm" (click)="showDeleteForm()">Delete</button>
-                </div>
-                <div  class="card-footer" *ngIf="disabledAddForm">
-                    <h6>Add Form</h6>
-                    <form role="form" #addStockForm>
-                        <div class="form-content">
-                            <div class="form-group">
-                                    <select type="select" ng-model="year" #year class="form-control">
-                                            <option *ngFor="let label of barChartLabels" [value]="label">
-                                                {{label}}
-                                            </option>
-                                    </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" ng-model="seriesa" #seriesa class="form-control input-underline input-lg"  placeholder="Series A value">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" ng-model="seriesb" #seriesb class="form-control input-underline input-lg"  placeholder="Series B value">
-                            </div>
-                        </div>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="newStockData(addStockForm,year.value,seriesa.value,seriesb.value)"> Submit </a>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="hideAddForm()">Cancel </a>
-                        &nbsp;
-                    </form>
-                </div>
-                <div  class="card-footer" *ngIf="disabledUpdateForm">
-                    <h6>Update Form</h6>
-                    <form role="form" #updateStockForm>
-                        <div class="form-content">
-                            <div class="form-group">
-                                    <select type="select" ng-model="year" #year class="form-control">
-                                            <option *ngFor="let label of barChartLabels" [value]="label">
-                                                {{label}}
-                                            </option>
-                                    </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" ng-model="seriesa" #seriesa class="form-control input-underline input-lg"  placeholder="Series A value">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" ng-model="seriesb" #seriesb class="form-control input-underline input-lg"  placeholder="Series B value">
-                            </div>
-                        </div>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="updateStockData(updateStockForm,year.value,seriesa.value,seriesb.value)"> Submit </a>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="hideUpdateForm()">Cancel </a>
-                        &nbsp;
-                    </form>
-                </div>
-                <div  class="card-footer" *ngIf="disabledDeleteForm">
-                    <h6>Delete Form</h6>
-                    <form role="form" #deleteStockForm>
-                        <div class="form-content">
-                            <div class="form-group">
-                                    <select type="select" ng-model="year" #year class="form-control">
-                                            <option *ngFor="let label of barChartLabels" [value]="label">
-                                                {{label}}
-                                            </option>
-                                    </select>
-                            </div>
-                        </div>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="deleteStockData(year.value)"> Submit </a>
-                        <a class="btn rounded-btn" [routerLink]="['/charts']" (click)="hideDeleteForm()">Cancel </a>
-                        &nbsp;
-                    </form>
-                </div>
+                <!-- <div class="card-footer">
+                </div> -->
             </div>
         </div>
-        <!-- <div class="col col-sm-6">
+        <div class="col col-sm-6">
             <div class="card mb-3">
                 <div class="card-header">
                     Doughnut Chart
@@ -92,6 +35,77 @@
                     </canvas>
                 </div>
             </div>
-        </div> -->
+        </div>
+    </div>
+
+    <div class="reglist" *ngIf="showForm">
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Close Price</th>
+                <th>Date</th>
+                <th>Stock</th>
+                <th>Total Shares</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let stock of selectedStocks, let i = index">
+                <td>{{i+1}}</td>
+                <td>{{stock.close}}</td>
+                <td>{{stock.date}}</td>
+                <td>{{stock.stock}}</td>
+                <td>{{stock.totalShares}}</td>
+                <td>
+                    <button type="button" class="btn btn-info" (click)="onEdit(i)">Edit</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" (click)="onDelete(stock.stock, stock.totalShares, stock.close)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+
+    <div class="card-body">
+        <div class="card-header">Update Form</div>
+        <form role="form" #addStockForm>
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="code">Close Price</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="code">High Price</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="code">Open Price</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="code">Stock</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="code">Total Shares</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                </div>
+                <br>
+                <button type="button" class="btn btn-default" (click)="onSubmit(i)">Submit</button>
+            </div>
+        </form>
     </div>
 </div>
