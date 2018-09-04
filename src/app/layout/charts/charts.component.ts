@@ -66,7 +66,9 @@ export class ChartsComponent implements OnInit {
     onEdit(index){
         console.log(index)
     }
+    onSubmit(){
 
+    }
     onDelete(stock,shares, close){
        this.api.deleteStock(2);
        let stockData = this.allStockData;
