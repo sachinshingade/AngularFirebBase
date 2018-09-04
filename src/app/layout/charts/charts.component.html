@@ -53,23 +53,23 @@
         </thead>
         <tbody>
             <tr *ngFor="let stock of selectedStocks, let i = index">
-                <td>{{i+1}}</td>
+                <td *ngIf="stock.close">{{i+1}}</td>
                 <td>{{stock.close}}</td>
                 <td>{{stock.date}}</td>
                 <td>{{stock.stock}}</td>
                 <td>{{stock.totalShares}}</td>
-                <td>
+                <td *ngIf="stock.close">
                     <button type="button" class="btn btn-info" (click)="onEdit(i)">Edit</button>
                 </td>
-                <td>
-                    <button type="button" class="btn btn-danger" (click)="onDelete(stock.stock, stock.totalShares, stock.close)">Delete</button>
+                <td *ngIf="stock.close">
+                    <button type="button" class="btn btn-danger" (click)="onDelete(stock.index,i)">Delete</button>
                 </td>
             </tr>
         </tbody>
         </table>
     </div>
 
-    <div class="card-body">
+    <div class="card-body" *ngIf="showEditForm">
         <div class="card-header">Update Form</div>
         <form role="form" #addStockForm>
             <div class="form-content">

@@ -14,14 +14,18 @@ export class LoginComponent implements OnInit {
     pwd: string;
     constructor(public router: Router) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        if(this.router.url == '/login' && localStorage.getItem('isLoggedin')){
+            this.router.navigate(['/dashboard']);
+        };
+    }
 
     onLoggedin(name:string, pwd:string) {
         this.name = name;
         this.pwd = pwd;
         if(this.name == '' || this.pwd == ''){
             alert('Please Enter your credentials');
-            this.router.navigateByUrl('/login');
+            this.router.navigate(['/login']);
         }
 
         localStorage.setItem('username', this.name);

@@ -17,6 +17,7 @@ export class ChartsComponent implements OnInit {
     allStockData=[];
     selectedStocks=[];
     showForm:boolean=false;
+    showEditForm:boolean = false;
 
     constructor(
         private ref:ChangeDetectorRef,
@@ -34,7 +35,7 @@ export class ChartsComponent implements OnInit {
 
     getAllStockNames(stocks){
         stocks.filter((value)=>{
-            this.allStockData.push(value.data);
+            this.allStockData.push(value);
             if(this.uniqueStocks.indexOf(value.data.stock) === -1){
                 this.uniqueStocks.push(value.data.stock);
             }
@@ -45,14 +46,18 @@ export class ChartsComponent implements OnInit {
         this.selectedStocks = [];
         let stocks = this.allStockData;
         stocks.filter((value)=>{
-            let yearIndex = this.barChartLabels.indexOf(value.date);
+
+            let yearIndex = this.barChartLabels.indexOf(value.data.date);
             if(event == ''){
                 this.barChartData[0].data[yearIndex] = 0;
+                this.barChartData[1].data[yearIndex] = 0;
                 this.showForm = false;
             }
-            if(value.stock === event){
-                this.selectedStocks.push(value);
-                this.barChartData[0].data[yearIndex] = Number(value.totalShares);
+            if(value.data.stock === event){
+                value.data.index = value.label; //set index key
+                this.selectedStocks.push(value.data);
+                this.barChartData[0].data[yearIndex] = Number(value.data.totalShares);
+                this.barChartData[1].data[yearIndex] = Number(value.data.close);
                 this.showForm = true;
             }
         })
@@ -60,7 +65,8 @@ export class ChartsComponent implements OnInit {
     }
 
     public barChartData: any[] = [
-        { data: [],label: 'Total Shares' ,yAxesID: "y-axis-1"},
+        { data: [],label: 'Total Shares' ,yAxisID: "yAxis1"},
+        { data: [],label: 'Close Price' ,yAxisID: "yAxis2"}
     ];
 
     onEdit(index){
@@ -69,13 +75,16 @@ export class ChartsComponent implements OnInit {
     onSubmit(){
 
     }
-    onDelete(stock,shares, close){
-       this.api.deleteStock(2);
-       let stockData = this.allStockData;
-       let index =  stockData.forEach((item,i) => {
-                        console.log(item.stock)
-                    });
-       console.log(index);
+    onDelete(deleteIndex, arrayIndex){
+        //update row
+        this.api.deleteStock(deleteIndex);
+        //update graph
+        let yearIndex = this.barChartLabels.indexOf(this.selectedStocks[0].date);
+        this.barChartData[0].data[yearIndex] = 0;
+        this.barChartData[1].data[yearIndex] = 0;
+        this.selectedStocks[arrayIndex] = '';
+        this.chart.ngOnInit();
+        alert('Deleted');
     }
 
     // bar chart
@@ -85,13 +94,12 @@ export class ChartsComponent implements OnInit {
                 barPercentage: 0.5
             }],
             yAxes: [{
-                id: "y-axis-1",
-                position: 'left',
-                type: 'linear',
+                id: "yAxis1",
                 ticks: {
                     max: 1600,
                     min: 0,
                     stepSize: 200,
+                    position: 'left'
                 },
                 scaleLabel: {
                   display: true,
@@ -99,15 +107,18 @@ export class ChartsComponent implements OnInit {
                 }
             },
             {
-                id: "y-axis-2",
-                position: 'right',
+                id: "yAxis2",
                 type: 'linear',
+                position: 'right',
                 ticks: {
-                    max: 200,
+                    max: 400,
                     min: 0,
                     stepSize:50,
+                },
+                scaleLabel: {
+                    display: true,
                     labelString: 'Close Price'
-                }
+                  }
               }]
         },
         barThickness:10,
@@ -126,6 +137,8 @@ export class ChartsComponent implements OnInit {
     public barChartColors: Array<any> = [
         { // all colors in order
           backgroundColor: ['blue','blue','blue']
+        },{
+          backgroundColor: ['pink','pink','pink']
         }
     ]
 
