@@ -20,7 +20,9 @@ export class ChartsComponent implements OnInit {
     showEditForm:boolean = false;
     model = {
         close:'',
+        date:'',
         high:'',
+        low:'',
         open:'',
         stock:'',
         totalShares:'',
@@ -93,22 +95,15 @@ export class ChartsComponent implements OnInit {
 
     onSubmit(form){
         let index = form.value.index;
-        let updatedObj = {
-            close:form.value.close,
-            high:form.value.high,
-            open:form.value.open,
-            stock:form.value.stock,
-            totalShares:form.value.totalShares,
-        }
-        this.api.updateStock(index, updatedObj);
-        let editData = this.selectedStocks[form.value.arrayindex];
 
+        this.api.updateStock(index, this.model);
+        let editData = this.selectedStocks[form.value.arrayindex];
         for (const key in editData) {
-            editData[key] = updatedObj[key];
+            editData[key] = this.model[key];
         }
         let yearIndex = this.barChartLabels.indexOf(editData.date);
-        this.barChartData[0].data[yearIndex] = Number(updatedObj.totalShares);
-        this.barChartData[1].data[yearIndex] = Number(updatedObj.close);
+        this.barChartData[0].data[yearIndex] = Number(this.model.totalShares);
+        this.barChartData[1].data[yearIndex] = Number(this.model.close);
         alert('Updated')
         this.chart.ngOnInit();
     }
