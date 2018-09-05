@@ -71,40 +71,43 @@
 
     <div class="card-body" *ngIf="showEditForm">
         <div class="card-header">Update Form</div>
-        <form role="form" #addStockForm>
+        <form (ngSubmit)="onSubmit(editForm)" #editForm="ngForm">
             <div class="form-content">
+                <input type="hidden" [(ngModel)]="model.index" name="index" />
+                <input type="hidden" [(ngModel)]="model.arrayindex" name="arrayindex" />
                 <div class="row">
                     <div class="col-md-4">
                         <label for="code">Close Price</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" id="close" required [(ngModel)]="model.close" name="close" #close="ngModel" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <label for="code">High Price</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" id="high" required [(ngModel)]="model.high" name="high" #high="ngModel" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <label for="code">Open Price</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" id="open" required [(ngModel)]="model.open" name="open" #open="ngModel" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <label for="code">Stock</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" id="stock" required [(ngModel)]="model.stock" name="stock" #stock="ngModel" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <label for="code">Total Shares</label>
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" id="totalShares" required [(ngModel)]="model.totalShares" name="totalShares" #totalShares="ngModel" />
                     </div>
                 </div>
                 <br>
-                <button type="button" class="btn btn-default" (click)="onSubmit()">Submit</button>
+                <button type="submit" class="btn btn-success" [disabled]="!editForm.form.valid">Submit</button>&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-default" (click)="onCancel()">Cancel</button>
             </div>
         </form>
     </div>

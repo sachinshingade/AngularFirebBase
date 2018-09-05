@@ -18,6 +18,15 @@ export class ChartsComponent implements OnInit {
     selectedStocks=[];
     showForm:boolean=false;
     showEditForm:boolean = false;
+    model = {
+        close:'',
+        high:'',
+        open:'',
+        stock:'',
+        totalShares:'',
+        index:'',
+        arrayindex:'',
+    };
 
     constructor(
         private ref:ChangeDetectorRef,
@@ -69,17 +78,46 @@ export class ChartsComponent implements OnInit {
         { data: [],label: 'Close Price' ,yAxisID: "yAxis2"}
     ];
 
-    onEdit(index){
-        console.log(index)
+    onEdit(arrayIndex){
+        this.showEditForm = !this.showEditForm
+        let data = this.selectedStocks[arrayIndex];
+        for (const key in this.model) {
+            this.model[key] = data[key];
+            this.model.arrayindex = arrayIndex;
+        }
     }
-    onSubmit(){
 
+    onCancel(){
+        this.showEditForm = !this.showEditForm
     }
+
+    onSubmit(form){
+        let index = form.value.index;
+        let updatedObj = {
+            close:form.value.close,
+            high:form.value.high,
+            open:form.value.open,
+            stock:form.value.stock,
+            totalShares:form.value.totalShares,
+        }
+        this.api.updateStock(index, updatedObj);
+        let editData = this.selectedStocks[form.value.arrayindex];
+
+        for (const key in editData) {
+            editData[key] = updatedObj[key];
+        }
+        let yearIndex = this.barChartLabels.indexOf(editData.date);
+        this.barChartData[0].data[yearIndex] = Number(updatedObj.totalShares);
+        this.barChartData[1].data[yearIndex] = Number(updatedObj.close);
+        //alert('Updated')
+        this.chart.ngOnInit();
+    }
+
     onDelete(deleteIndex, arrayIndex){
         //update row
         this.api.deleteStock(deleteIndex);
         //update graph
-        let yearIndex = this.barChartLabels.indexOf(this.selectedStocks[0].date);
+        let yearIndex = this.barChartLabels.indexOf(this.selectedStocks[arrayIndex].date);
         this.barChartData[0].data[yearIndex] = 0;
         this.barChartData[1].data[yearIndex] = 0;
         this.selectedStocks[arrayIndex] = '';

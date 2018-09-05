@@ -25,7 +25,8 @@ export class ApiService {
   }
 
   updateStock(key: string, value: any): void {
-    this.stockRef.update(key, value).catch(error => this.handleError(error));
+    let updatedKey = this.dbPath+key;
+    this.stockRef.update(updatedKey, value).catch(error => this.handleError(error));
   }
 
   deleteStock(key):void{
