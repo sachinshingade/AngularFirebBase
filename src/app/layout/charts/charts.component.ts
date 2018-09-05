@@ -109,7 +109,7 @@ export class ChartsComponent implements OnInit {
         let yearIndex = this.barChartLabels.indexOf(editData.date);
         this.barChartData[0].data[yearIndex] = Number(updatedObj.totalShares);
         this.barChartData[1].data[yearIndex] = Number(updatedObj.close);
-        //alert('Updated')
+        alert('Updated')
         this.chart.ngOnInit();
     }
 
